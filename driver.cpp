@@ -7,33 +7,48 @@
 #include <vector>
 #include "HuffmanNode.h"
 
+// This class is needed to compare two HuffmanNodes
 class Compare {
     public:
-        bool operator() (HuffmanNode &a, HuffmanNode &b){
-            if (a.getFrequency() < b.getFrequency()) {
-                return true;
-            }
-            return false;
+        int operator() (const HuffmanNode &a, const HuffmanNode &b){
+            return a.getFrequency() > b.getFrequency();
         }
 };
+
 void print_unordered_map(std::unordered_map<char, int> &key_value_pairs) {
     for( const auto& n : key_value_pairs ) {
         std::cout << "Key:[" << n.first << "] Value:[" << n.second << "]\n";
     }
 }
 
-void build_huffman_tree(std::unordered_map<char, int> &key_value_pairs){
-    std::priority_queue<HuffmanNode, std::vector<HuffmanNode>, Compare> min_huffman_heap;
-    for( const auto& n : key_value_pairs ) {
-        std::shared_ptr<HuffmanNode> node(new HuffmanNode(n.first, n.second));
-        min_huffman_heap.push(*node);
-    }
-    std::cout << min_huffman_heap.size() << "\n";
+void print_tree(std::priority_queue<HuffmanNode, std::vector<HuffmanNode>, Compare> tree) {
+
 }
 
+// First construct a min-heap with frequency values. Then build the huffman tree.
+void build_huffman_tree(std::unordered_map<char, int> &key_value_pairs){
+    std::priority_queue<HuffmanNode, std::vector<HuffmanNode>, Compare> huffman_tree;
+    for( const auto& n : key_value_pairs ) {
+        std::shared_ptr<HuffmanNode> node(new HuffmanNode(n.first, n.second));
+        huffman_tree.push(*node);
+    }
 
+    while (huffman_tree.size() != 1) {
+        HuffmanNode small_1 = huffman_tree.top();
+        huffman_tree.pop();
+        HuffmanNode small_2 = huffman_tree.top();
+        huffman_tree.pop();
+        int freq = small_1.getFrequency() + small_2.getFrequency();
+        std::shared_ptr<HuffmanNode> node(new HuffmanNode('\0', freq, small_1, small_2));
+        huffman_tree.push(*node);
+    }
+    HuffmanNode root = huffman_tree.top();
+    std::cout << "Root: " << root.getFrequency() << " letter: " << root.getLetter() << "\n";
+    std::cout << "HuffmanTree built\n";
+}
+
+// Checks if key is in unordered_map
 bool check_key(char letter, std::unordered_map<char, int> &key_value_pairs) {
-    // Checks if key is in unordered_map
     if (key_value_pairs.find(letter) == key_value_pairs.end()) {
         return false;
     }

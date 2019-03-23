@@ -5,11 +5,14 @@ class HuffmanNode {
     private:
         char letter;
         int frequency;
-        HuffmanNode *left, *right;
+
     public:
+        HuffmanNode *left, *right;
         HuffmanNode(char letter, int frequency);
+        HuffmanNode(char letter, int frequency, HuffmanNode &left, HuffmanNode &right);
         ~HuffmanNode();
-        int getFrequency();
+        int getFrequency() const;
+        char getLetter() const;
 };
 
 #endif
