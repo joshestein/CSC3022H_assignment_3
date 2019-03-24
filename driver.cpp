@@ -14,6 +14,7 @@ void print_unordered_map(std::unordered_map<char, int> &key_value_pairs) {
     }
 }
 
+/*
 void inorder(std::shared_ptr<HuffmanNode> root) {
     if (root->left == nullptr && root->right == nullptr) {
         std::cout << root->getLetter() << ": " << root->getFrequency() << "\n";
@@ -26,22 +27,10 @@ void inorder(std::shared_ptr<HuffmanNode> root) {
         }
     }
 }
-
-void inorder(HuffmanNode &root) {
-    if (root.left == nullptr && root.right == nullptr) {
-        std::cout << root.getLetter() << ": " << root.getFrequency() << "\n";
-    } else {
-        if (root.left != nullptr) {
-            inorder(root.left);
-        }
-        if (root.right != nullptr) {
-            inorder(root.right);
-        }
-    }
-}
+*/
 
 // First construct a min-heap with frequency values. Then build the huffman tree.
-void build_huffman_tree(std::unordered_map<char, int> &key_value_pairs){
+HuffmanTree build_huffman_tree(std::unordered_map<char, int> &key_value_pairs){
     HuffmanTree tree;
 
     // push letter-frequencies onto Huffman tree (as leaves)
@@ -59,6 +48,7 @@ void build_huffman_tree(std::unordered_map<char, int> &key_value_pairs){
         //std::cout << "small_1: " << small_1.getLetter() << " freq: "<<small_1.getFrequency() << "\n";
         
         // combine frequencies of two smallest nodes
+        // put into new node
         int freq = small_1.getFrequency() + small_2.getFrequency();
         HuffmanNode node('\0', freq);;
         node.left = std::make_shared<HuffmanNode>(small_1);
@@ -66,11 +56,9 @@ void build_huffman_tree(std::unordered_map<char, int> &key_value_pairs){
         tree.push(node);
     }
 
-    HuffmanNode root = tree.top();
-    //auto ptrRoot = std::make_shared<HuffmanNode>(root);
-    //inorder(ptrRoot);
-    inorder(root);
+    //inorder(root);
     std::cout << "HuffmanTree built\n";
+    return tree;
 }
 
 // Checks if key is in unordered_map
@@ -81,6 +69,7 @@ bool check_key(char letter, std::unordered_map<char, int> &key_value_pairs) {
     return true;
 }
 
+// Read file into key value pairs
 int read_file(std::string file_name, std::unordered_map<char, int> &key_value_pairs) {
     std::string line;
     std::ifstream myfile (file_name);
@@ -116,6 +105,8 @@ int main(int argc, char *argv[]) {
     if (read_file(argv[1], key_value_pairs)) {
         print_unordered_map(key_value_pairs);
     }
-    build_huffman_tree(key_value_pairs);
+    HuffmanTree tree = build_huffman_tree(key_value_pairs);
+    HuffmanNode root = tree.top();
+    tree.print_inorder(root);
     return 0;
 }
