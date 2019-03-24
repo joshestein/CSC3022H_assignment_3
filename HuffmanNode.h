@@ -1,15 +1,17 @@
 #ifndef HuffmanNode_H
 #define HuffmanNode_H
 
+#include <memory>
+
 class HuffmanNode {
     private:
         char letter;
         int frequency;
 
     public:
-        HuffmanNode *left, *right;
+        std::shared_ptr<HuffmanNode> left;
+        std::shared_ptr<HuffmanNode> right;
         HuffmanNode(char letter, int frequency);
-        HuffmanNode(char letter, int frequency, HuffmanNode &left, HuffmanNode &right);
         ~HuffmanNode();
         int getFrequency() const;
         char getLetter() const;
