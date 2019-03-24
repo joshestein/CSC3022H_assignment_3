@@ -13,4 +13,4 @@ build: $(OBJECTS)
 	$(CC) -c $<
 
 run:
-	./huffencode test.txt output.txt
+	./huffencode test.txt output
