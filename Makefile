@@ -1,5 +1,5 @@
 CC=g++ -std=c++11
-OBJECTS=HuffmanNode.o
+OBJECTS=HuffmanNode.o HuffmanTree.o
 
 all: clean build run
 
