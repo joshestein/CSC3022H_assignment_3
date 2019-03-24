@@ -106,7 +106,14 @@ int main(int argc, char *argv[]) {
         print_unordered_map(key_value_pairs);
     }
     HuffmanTree tree = build_huffman_tree(key_value_pairs);
+    std::unordered_map<char, std::string> huffman_encoding;
+
     HuffmanNode root = tree.top();
-    tree.print_inorder(root);
+    tree.encode(root, "", huffman_encoding);
+
+    std::cout << "Huffman codes: \n";
+    for (auto  pair:huffman_encoding) {
+        std::cout << pair.first << ": " << pair.second << "\n";
+    }
     return 0;
 }
