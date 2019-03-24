@@ -40,8 +40,9 @@ void HuffmanTree::print_inorder(HuffmanNode &root) {
     }
 }
 
-void HuffmanTree::encode(HuffmanNode &root, std::string str, std::unordered_map<char, std::string> encoding) {
+void HuffmanTree::encode(HuffmanNode &root, std::string str, std::unordered_map<char, std::string> &encoding) {
     if (root.left == nullptr && root.right == nullptr) {
+        encoding[root.getLetter()] = str;
         return;
     } else {
         if (root.left != nullptr) {

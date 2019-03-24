@@ -27,7 +27,7 @@ class HuffmanTree {
 
         void print_inorder(HuffmanNode &root);
 
-        void encode(HuffmanNode &root, std::string str, std::unordered_map<char, std::string>);
+        void encode(HuffmanNode &root, std::string str, std::unordered_map<char, std::string> &encoding);
         void decode();
 };
 
