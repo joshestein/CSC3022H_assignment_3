@@ -1,4 +1,9 @@
+#ifndef HuffmanTree_H
+#define HuffmanTree_H
+
 #include <memory>
+#include <string>
+#include <unordered_map>
 #include "HuffmanNode.h"
 
 // This class is needed to compare two HuffmanNodes
@@ -22,7 +27,8 @@ class HuffmanTree {
 
         void print_inorder(HuffmanNode &root);
 
-        void encode();
+        void encode(HuffmanNode &root, std::string str, std::unordered_map<char, std::string>);
         void decode();
 };
 
+#endif

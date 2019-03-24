@@ -1,5 +1,7 @@
 #include <iostream>
 #include <queue>
+#include <string>
+#include <unordered_map>
 #include "HuffmanTree.h"
 
 HuffmanTree::HuffmanTree(void) {
@@ -38,7 +40,17 @@ void HuffmanTree::print_inorder(HuffmanNode &root) {
     }
 }
 
-void HuffmanTree::encode() {
+void HuffmanTree::encode(HuffmanNode &root, std::string str, std::unordered_map<char, std::string> encoding) {
+    if (root.left == nullptr && root.right == nullptr) {
+        return;
+    } else {
+        if (root.left != nullptr) {
+            encode(*(root.left), str+"0", encoding);
+        }
+        if (root.right != nullptr) {
+            encode(*(root.right), str+"1", encoding);
+        }
+    }
 }
 
 void HuffmanTree::decode() {
