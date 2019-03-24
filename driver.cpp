@@ -6,14 +6,7 @@
 #include <unordered_map>
 #include <vector>
 #include "HuffmanNode.h"
-
-// This class is needed to compare two HuffmanNodes
-class Compare {
-    public:
-        int operator() (const HuffmanNode &a, const HuffmanNode &b){
-            return a.getFrequency() > b.getFrequency();
-        }
-};
+#include "HuffmanTree.h"
 
 void print_unordered_map(std::unordered_map<char, int> &key_value_pairs) {
     for( const auto& n : key_value_pairs ) {
@@ -21,29 +14,62 @@ void print_unordered_map(std::unordered_map<char, int> &key_value_pairs) {
     }
 }
 
-void print_tree(std::priority_queue<HuffmanNode, std::vector<HuffmanNode>, Compare> tree) {
+void inorder(std::shared_ptr<HuffmanNode> root) {
+    if (root->left == nullptr && root->right == nullptr) {
+        std::cout << root->getLetter() << ": " << root->getFrequency() << "\n";
+    } else {
+        if (root->left != nullptr) {
+            inorder(root->left);
+        }
+        if (root->right != nullptr) {
+            inorder(root->right);
+        }
+    }
+}
 
+void inorder(HuffmanNode &root) {
+    if (root.left == nullptr && root.right == nullptr) {
+        std::cout << root.getLetter() << ": " << root.getFrequency() << "\n";
+    } else {
+        if (root.left != nullptr) {
+            inorder(root.left);
+        }
+        if (root.right != nullptr) {
+            inorder(root.right);
+        }
+    }
 }
 
 // First construct a min-heap with frequency values. Then build the huffman tree.
 void build_huffman_tree(std::unordered_map<char, int> &key_value_pairs){
-    std::priority_queue<HuffmanNode, std::vector<HuffmanNode>, Compare> huffman_tree;
+    HuffmanTree tree;
+
+    // push letter-frequencies onto Huffman tree (as leaves)
     for( const auto& n : key_value_pairs ) {
-        std::shared_ptr<HuffmanNode> node(new HuffmanNode(n.first, n.second));
-        huffman_tree.push(*node);
+        HuffmanNode node(n.first, n.second);
+        tree.push(node);
     }
 
-    while (huffman_tree.size() != 1) {
-        HuffmanNode small_1 = huffman_tree.top();
-        huffman_tree.pop();
-        HuffmanNode small_2 = huffman_tree.top();
-        huffman_tree.pop();
+    while (tree.size() != 1) {
+        HuffmanNode small_1 = tree.top();
+        tree.pop();
+        HuffmanNode small_2 = tree.top();
+        tree.pop();
+
+        //std::cout << "small_1: " << small_1.getLetter() << " freq: "<<small_1.getFrequency() << "\n";
+        
+        // combine frequencies of two smallest nodes
         int freq = small_1.getFrequency() + small_2.getFrequency();
-        std::shared_ptr<HuffmanNode> node(new HuffmanNode('\0', freq, small_1, small_2));
-        huffman_tree.push(*node);
+        HuffmanNode node('\0', freq);;
+        node.left = std::make_shared<HuffmanNode>(small_1);
+        node.right = std::make_shared<HuffmanNode>(small_2);
+        tree.push(node);
     }
-    HuffmanNode root = huffman_tree.top();
-    std::cout << "Root: " << root.getFrequency() << " letter: " << root.getLetter() << "\n";
+
+    HuffmanNode root = tree.top();
+    //auto ptrRoot = std::make_shared<HuffmanNode>(root);
+    //inorder(ptrRoot);
+    inorder(root);
     std::cout << "HuffmanTree built\n";
 }
 
