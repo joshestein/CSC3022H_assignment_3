@@ -4,10 +4,33 @@
 #include <unordered_map>
 #include "HuffmanTree.h"
 
+// default constructor
 HuffmanTree::HuffmanTree(void) {
     std::cout << "Tree being created\n";
 }
 
+// copy constructor
+HuffmanTree::HuffmanTree(const HuffmanTree& tree): huffman_tree(tree.huffman_tree) {
+}
+
+// copy assignment
+HuffmanTree& HuffmanTree::operator= (const HuffmanTree& tree) {
+    huffman_tree = tree.huffman_tree;
+}
+
+// move constructor
+HuffmanTree::HuffmanTree(HuffmanTree&& tree): huffman_tree(tree.huffman_tree) {
+    // reset tree 
+    tree.huffman_tree = std::priority_queue<HuffmanNode, std::vector<HuffmanNode>, Compare> ();
+}
+
+// move assignment
+HuffmanTree& HuffmanTree::operator=(HuffmanTree&& tree) {
+    huffman_tree = tree.huffman_tree;
+    tree.huffman_tree = std::priority_queue<HuffmanNode, std::vector<HuffmanNode>, Compare> ();
+}
+
+// destructor
 HuffmanTree::~HuffmanTree() {
 }
 

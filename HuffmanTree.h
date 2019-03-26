@@ -17,8 +17,12 @@ class Compare {
 class HuffmanTree {
     std::priority_queue<HuffmanNode, std::vector<HuffmanNode>, Compare> huffman_tree;
     public:
-        HuffmanTree();
-        ~HuffmanTree();
+        HuffmanTree();                                      // default constructor
+        HuffmanTree(const HuffmanTree& tree);               // copy constructor
+        HuffmanTree& operator= (const HuffmanTree& tree);   // copy assignment
+        HuffmanTree(HuffmanTree&& tree);                    // move constructor
+        HuffmanTree& operator=(HuffmanTree&& tree);         // move assignment
+        ~HuffmanTree();                                     // destructor
 
         void push(HuffmanNode &node);
         HuffmanNode top();
