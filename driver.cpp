@@ -70,7 +70,7 @@ bool check_key(char letter, std::unordered_map<char, int> &key_value_pairs) {
     return true;
 }
 
-// Read file into char array
+// Read file into string
 std::string read_file_into_string(const std::string &file_name) {
     std::ifstream myfile (file_name);
     if (myfile.is_open()) {
@@ -154,10 +154,15 @@ int main(int argc, char *argv[]) {
     
     HuffmanTree tree = build_huffman_tree(key_value_pairs);
     std::unordered_map<char, std::string> huffman_encoding;
+    std::unordered_map<std::string, char> reverse_encoding;
 
     HuffmanNode root = tree.top();
-    tree.encode(root, "", huffman_encoding);
+    tree.encode(root, "", huffman_encoding, reverse_encoding);
 
     write_out(argv[2], input, huffman_encoding);
+    
+    std::string encoded_string = read_file_into_string(std::string(argv[2]) + ".txt");
+    std::string decoded = tree.decode(encoded_string, reverse_encoding);
+    std::cout << decoded << "\n";
     return 0;
 }

@@ -40,19 +40,30 @@ void HuffmanTree::print_inorder(HuffmanNode &root) {
     }
 }
 
-void HuffmanTree::encode(HuffmanNode &root, std::string str, std::unordered_map<char, std::string> &encoding) {
+void HuffmanTree::encode(HuffmanNode &root, std::string str, std::unordered_map<char, std::string> &encoding, std::unordered_map<std::string, char> &reverse_encoding) {
     if (root.left == nullptr && root.right == nullptr) {
         encoding[root.getLetter()] = str;
+        reverse_encoding[str] = root.getLetter();
         return;
     } else {
         if (root.left != nullptr) {
-            encode(*(root.left), str+"0", encoding);
+            encode(*(root.left), str+"0", encoding, reverse_encoding);
         }
         if (root.right != nullptr) {
-            encode(*(root.right), str+"1", encoding);
+            encode(*(root.right), str+"1", encoding, reverse_encoding);
         }
     }
 }
 
-void HuffmanTree::decode() {
+std::string HuffmanTree::decode(std::string &binary, std::unordered_map<std::string, char> &reverse_encoding){
+    std::string digit_sequence;
+    std::string output;
+    for (int i = 0; i < binary.size(); i++) {
+        digit_sequence += binary[i];
+        if (reverse_encoding[digit_sequence]) {
+            output += reverse_encoding[digit_sequence];
+            digit_sequence = "";
+        }
+    }
+    return output;
 }
