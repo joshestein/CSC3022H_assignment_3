@@ -45,8 +45,6 @@ HuffmanTree build_huffman_tree(std::unordered_map<char, int> &key_value_pairs){
         tree.pop();
         HuffmanNode small_2 = tree.top();
         tree.pop();
-
-        //std::cout << "small_1: " << small_1.getLetter() << " freq: "<<small_1.getFrequency() << "\n";
         
         // combine frequencies of two smallest nodes
         // put into new node
@@ -56,8 +54,6 @@ HuffmanTree build_huffman_tree(std::unordered_map<char, int> &key_value_pairs){
         node.right = std::make_shared<HuffmanNode>(small_2);
         tree.push(node);
     }
-
-    //inorder(root);
     std::cout << "HuffmanTree built\n";
     return tree;
 }
