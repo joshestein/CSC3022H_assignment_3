@@ -2,6 +2,7 @@
 #define HuffmanTree_H
 
 #include <memory>
+#include <queue>
 #include <string>
 #include <unordered_map>
 #include "HuffmanNode.h"

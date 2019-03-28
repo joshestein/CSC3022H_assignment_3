@@ -39,7 +39,9 @@ void HuffmanTree::push(HuffmanNode &node){
 }
 
 HuffmanNode HuffmanTree::top(){
-    return huffman_tree.top();
+    if (!huffman_tree.empty()) {
+        return huffman_tree.top();
+    }
 }
 
 void HuffmanTree::pop(){
