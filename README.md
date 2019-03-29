@@ -3,7 +3,7 @@ Welcome to the readme.
 ### Instructions
 
 1. Run ```make``` to build the executable. 
-2. Run ./<executable> <inputFile.txt> <outputName> to build the Huffman
+2. Run ./\<executable> \<inputFile.txt> \<outputName> to build the Huffman
    encoding. Please provide a simple output name - the program will build a
    corresponding output.txt and output.hdr
 
