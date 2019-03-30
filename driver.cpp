@@ -16,36 +16,6 @@ void print_unordered_map(std::unordered_map<char, int> &key_value_pairs) {
     }
 }
 
-/*
-// First construct a min-heap with frequency values. Then build the huffman tree.
-HuffmanTree build_huffman_tree(std::unordered_map<char, int> &key_value_pairs){
-    HuffmanTree tree;
-
-    // push letter-frequencies onto Huffman tree (as leaves)
-    for( const auto& n : key_value_pairs ) {
-        HuffmanNode node(n.first, n.second);
-        tree.push(node);
-    }
-
-    while (tree.size() != 1) {
-        HuffmanNode small_1 = tree.top();
-        tree.pop();
-        HuffmanNode small_2 = tree.top();
-        tree.pop();
-        
-        // combine frequencies of two smallest nodes
-        // put into new node
-        int freq = small_1.getFrequency() + small_2.getFrequency();
-        HuffmanNode node('\0', freq);;
-        node.left = std::make_shared<HuffmanNode>(small_1);
-        node.right = std::make_shared<HuffmanNode>(small_2);
-        tree.push(node);
-    }
-    std::cout << "HuffmanTree built\n";
-    return tree;
-}
-*/
-
 // Checks if key is in unordered_map
 bool check_key(char letter, std::unordered_map<char, int> &key_value_pairs) {
     if (key_value_pairs.find(letter) == key_value_pairs.end()) {

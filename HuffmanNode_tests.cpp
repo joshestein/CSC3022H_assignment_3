@@ -128,6 +128,13 @@ TEST_CASE("HuffmanNode tests", "[HuffmanNode]") {
     REQUIRE((ptrNode->right)->getFrequency() == 25);
     REQUIRE((ptrNode->right)->getLetter() == 'b');
     std::cout << "---------------------\n";
+
+    //------------------------------------------------------//
+    //------------------Node comparison---------------------//
+    //------------------------------------------------------//
+    HuffmanNode small('s', 1);
+    HuffmanNode big('b', 100);
+    //REQUIRE(big > small);
 }
 
 
