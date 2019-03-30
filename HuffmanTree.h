@@ -7,14 +7,6 @@
 #include <unordered_map>
 #include "HuffmanNode.h"
 
-// This class is needed to compare two HuffmanNodes
-class Compare {
-    public:
-        int operator() (const HuffmanNode &a, const HuffmanNode &b){
-            return a.getFrequency() > b.getFrequency();
-        }
-};
-
 class HuffmanTree {
     std::priority_queue<HuffmanNode, std::vector<HuffmanNode>, Compare> huffman_tree;
     public:
@@ -30,6 +22,7 @@ class HuffmanTree {
         void pop();
         int size();
 
+        void build_tree(std::unordered_map<char, int> &key_value_pairs);
         void print_inorder(HuffmanNode &root);
 
         void encode(HuffmanNode &root, std::string str, std::unordered_map<char, std::string> &encoding, std::unordered_map<std::string, char> &reverse_encoding);

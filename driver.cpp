@@ -1,3 +1,4 @@
+#include <bitset>
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -16,20 +17,6 @@ void print_unordered_map(std::unordered_map<char, int> &key_value_pairs) {
 }
 
 /*
-void inorder(std::shared_ptr<HuffmanNode> root) {
-    if (root->left == nullptr && root->right == nullptr) {
-        std::cout << root->getLetter() << ": " << root->getFrequency() << "\n";
-    } else {
-        if (root->left != nullptr) {
-            inorder(root->left);
-        }
-        if (root->right != nullptr) {
-            inorder(root->right);
-        }
-    }
-}
-*/
-
 // First construct a min-heap with frequency values. Then build the huffman tree.
 HuffmanTree build_huffman_tree(std::unordered_map<char, int> &key_value_pairs){
     HuffmanTree tree;
@@ -57,6 +44,7 @@ HuffmanTree build_huffman_tree(std::unordered_map<char, int> &key_value_pairs){
     std::cout << "HuffmanTree built\n";
     return tree;
 }
+*/
 
 // Checks if key is in unordered_map
 bool check_key(char letter, std::unordered_map<char, int> &key_value_pairs) {
@@ -90,31 +78,6 @@ void get_letter_frequencies(const std::string &input, std::unordered_map<char, i
     }
 }
 
-// Read file into key value pairs
-int read_file(std::string file_name, std::unordered_map<char, int> &key_value_pairs) {
-    std::string line;
-    std::ifstream myfile (file_name);
-    if (myfile.is_open()) {
-        while (getline(myfile, line)) {
-            char letter;
-            for (int i = 0; i < line.length(); i++){
-                letter = line[i];
-                // Increment frequency count (if in map)
-                // Otherwise set frequency to 1 (if not in map)
-                if (check_key(letter, key_value_pairs)) {
-                    key_value_pairs[letter]++;
-                } else {
-                    key_value_pairs[letter] = 1;
-                }
-            }
-        }
-        myfile.close();
-        return 1;
-    } 
-    std::cout << "There was an error reading the file. Did you enter the file name correctly?\n";
-    return 0;
-}
-
 int write_out(const std::string &output_name, const std::string &input, std::unordered_map<char, std::string> &huffman_encoding) {
     std::ofstream myfile;
 
@@ -134,6 +97,79 @@ int write_out(const std::string &output_name, const std::string &input, std::uno
     return 1;
 }
 
+int write_bytes(const std::string &output_name, const std::string &encoded_string) {
+    std::ofstream myfile;
+
+    /*
+    myfile.open(output_name + "_bitstream.txt");
+    std::cout << encoded_string << "\n";
+    for (int i = 0; i < encoded_string.size(); i++) {
+        int bit = encoded_string[i] - '0';
+        //std::cout << bit; 
+        bit_buffer = bit_buffer << 1|bit;
+        //std::cout << (int)bit_buffer << "\n";
+        //std::cout << bit_buffer << "\n";
+        bit_count++;
+        overall_bit_count++;
+        if (bit_count == 8) {
+            myfile << &bit_buffer;
+            std::cout << "Bit buffer: " << &bit_buffer << "\n";
+            //std::cout << "Bit buffer: " << (int)bit_buffer << "\n";
+            bit_buffer = 0;
+            bit_count  = 0;
+        }
+    }
+    std::cout << "Bit buffer: " << (int)bit_buffer << "\n";
+    myfile << &bit_buffer;
+    myfile.close();
+
+    myfile.open(output_name + "_bitstream.hdr");
+    myfile << overall_bit_count++;
+    myfile.close();
+
+    */
+
+
+    char *end;
+    long value = std::strtol(encoded_string.c_str(), &end, 2);
+    unsigned char c = value;
+
+    myfile.open(output_name+"_bytes.txt", std::ofstream::binary);
+    myfile.write(encoded_string.c_str(), encoded_string.size());
+    myfile.close();
+
+    myfile.open(output_name+"_bytes.hdr");
+    myfile << encoded_string.size();
+    myfile.close();
+    /*
+    std::cout <<  c_2 << "\n";
+    std::cout << (int)c_2 << "\n";
+    unsigned char c = value & 0xFF;
+    std::cout << "Strtol char" << c << "\n";
+    */
+
+    return 1;
+}
+
+std::string read_bytes(const std::string &file_name) {
+    int size;
+
+    std::ifstream myfile (file_name+"_bytes.hdr");
+    myfile >> size;
+    myfile.close();
+
+    myfile.open(file_name+"_bytes.txt", std::ifstream::binary);
+    if (myfile.is_open()) {
+        std::string buffer;
+        buffer.resize(size);
+        myfile.read(&buffer[0], buffer.size());
+        myfile.close();
+        return buffer;
+    }
+    std::cout << "There was an error reading the file. Did you enter the file name correctly?\n";
+    return "";
+}
+
 int main(int argc, char *argv[]) {
     if (argc != 3) {
         std::cout << "You entered incorrect arguments.\n";
@@ -148,7 +184,8 @@ int main(int argc, char *argv[]) {
     // generate letter frequencies in string
     get_letter_frequencies(input, key_value_pairs);
     
-    HuffmanTree tree = build_huffman_tree(key_value_pairs);
+    HuffmanTree tree; 
+    tree.build_tree(key_value_pairs);
     std::unordered_map<char, std::string> huffman_encoding;
     std::unordered_map<std::string, char> reverse_encoding;
 
@@ -159,6 +196,14 @@ int main(int argc, char *argv[]) {
     
     std::string encoded_string = read_file_into_string(std::string(argv[2]) + ".txt");
     std::string decoded = tree.decode(encoded_string, reverse_encoding);
-    std::cout << decoded << "\n";
+
+    if (write_bytes(argv[2], encoded_string)) {
+        std::cout << "Succesfully wrote bit-stream\n";
+    }
+
+    std::string new_encoded_string = read_bytes(std::string(argv[2]));
+    std::string new_decoded = tree.decode(new_encoded_string, reverse_encoding);
+    std::cout << new_decoded << "\n";
+            
     return 0;
 }

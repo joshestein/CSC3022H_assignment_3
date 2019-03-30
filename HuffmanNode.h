@@ -22,4 +22,12 @@ class HuffmanNode {
         char getLetter() const;
 };
 
+// This class is needed to compare two HuffmanNodes
+class Compare {
+    public:
+        int operator() (const HuffmanNode &a, const HuffmanNode &b){
+            return a.getFrequency() > b.getFrequency();
+        }
+};
+
 #endif

@@ -52,6 +52,28 @@ int HuffmanTree::size() {
     return huffman_tree.size();
 }
 
+void HuffmanTree::build_tree(std::unordered_map<char, int> &key_value_pairs) {
+   for (const auto& n: key_value_pairs) {
+       HuffmanNode node(n.first, n.second);
+       huffman_tree.push(node);
+   }
+
+   while (huffman_tree.size() != 1) {
+       HuffmanNode small_1 = huffman_tree.top();
+       huffman_tree.pop();
+       HuffmanNode small_2 = huffman_tree.top();
+       huffman_tree.pop();
+       
+       // combine frequencies of two smallest nodes
+       // put into new node
+       int freq = small_1.getFrequency() + small_2.getFrequency();
+       HuffmanNode node('\0', freq);;
+       node.left = std::make_shared<HuffmanNode>(small_1);
+       node.right = std::make_shared<HuffmanNode>(small_2);
+       huffman_tree.push(node);
+   }
+}
+
 void HuffmanTree::print_inorder(HuffmanNode &root) {
     if (root.left == nullptr && root.right == nullptr) {
         std::cout << root.getLetter() << ": " << root.getFrequency() << "\n";
