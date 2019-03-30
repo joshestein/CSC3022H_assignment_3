@@ -74,7 +74,6 @@ int write_bytes(const std::string &output_name, const std::string &encoded_strin
 
     unsigned char bit_buffer;
     int bit_count = 0;
-    int overall_bit_count = 0;
 
     myfile.open(output_name + "_bitstream.txt", std::ofstream::binary);
     // build a bit_buffer with every 8 bites
@@ -83,7 +82,6 @@ int write_bytes(const std::string &output_name, const std::string &encoded_strin
         int bit = encoded_string[i] - '0';
         bit_buffer = bit_buffer << 1|bit;
         bit_count++;
-        overall_bit_count++;
         if (bit_count == 8) {
             myfile << bit_buffer;
             bit_buffer = 0;
@@ -96,29 +94,10 @@ int write_bytes(const std::string &output_name, const std::string &encoded_strin
     myfile.close();
 
     myfile.open(output_name + "_bitstream.hdr");
-    myfile << overall_bit_count;
-    myfile.close();
-
-    /*
-    char *end;
-    long value = std::strtol(encoded_string.c_str(), &end, 2);
-    unsigned char c = value;
-
-    myfile.open(output_name+"_bytes.txt", std::ofstream::binary);
-    //myfile.write(value, encoded_string.size());
-    myfile << c;
-    myfile.close();
-
-    myfile.open(output_name+"_bytes.hdr");
     myfile << encoded_string.size();
     myfile.close();
-    */
-    /*
-    std::cout <<  c_2 << "\n";
-    std::cout << (int)c_2 << "\n";
-    unsigned char c = value & 0xFF;
-    std::cout << "Strtol char" << c << "\n";
-    */
+
+    // strtol can also be used, but will be limited for very large encodings
 
     return 1;
 }
