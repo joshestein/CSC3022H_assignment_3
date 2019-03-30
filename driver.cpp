@@ -1,6 +1,7 @@
 #include <bitset>
 #include <fstream>
 #include <iostream>
+#include <math.h>
 #include <memory>
 #include <queue>
 #include <string>
@@ -48,6 +49,7 @@ void get_letter_frequencies(const std::string &input, std::unordered_map<char, i
     }
 }
 
+// Write encoding pairs to .hdr file and actual encoding to .txt
 int write_out(const std::string &output_name, const std::string &input, std::unordered_map<char, std::string> &huffman_encoding) {
     std::ofstream myfile;
 
@@ -70,47 +72,47 @@ int write_out(const std::string &output_name, const std::string &input, std::uno
 int write_bytes(const std::string &output_name, const std::string &encoded_string) {
     std::ofstream myfile;
 
-    /*
-    myfile.open(output_name + "_bitstream.txt");
-    std::cout << encoded_string << "\n";
+    unsigned char bit_buffer;
+    int bit_count = 0;
+    int overall_bit_count = 0;
+
+    myfile.open(output_name + "_bitstream.txt", std::ofstream::binary);
+    // build a bit_buffer with every 8 bites
+    // write that buffer to a file, then start again
     for (int i = 0; i < encoded_string.size(); i++) {
         int bit = encoded_string[i] - '0';
-        //std::cout << bit; 
         bit_buffer = bit_buffer << 1|bit;
-        //std::cout << (int)bit_buffer << "\n";
-        //std::cout << bit_buffer << "\n";
         bit_count++;
         overall_bit_count++;
         if (bit_count == 8) {
-            myfile << &bit_buffer;
-            std::cout << "Bit buffer: " << &bit_buffer << "\n";
-            //std::cout << "Bit buffer: " << (int)bit_buffer << "\n";
+            myfile << bit_buffer;
             bit_buffer = 0;
             bit_count  = 0;
         }
     }
-    std::cout << "Bit buffer: " << (int)bit_buffer << "\n";
-    myfile << &bit_buffer;
+    // leftover bits
+    //bit_buffer = bit_buffer & 0xFF;
+    myfile << bit_buffer;
     myfile.close();
 
     myfile.open(output_name + "_bitstream.hdr");
-    myfile << overall_bit_count++;
+    myfile << overall_bit_count;
     myfile.close();
 
-    */
-
-
+    /*
     char *end;
     long value = std::strtol(encoded_string.c_str(), &end, 2);
     unsigned char c = value;
 
     myfile.open(output_name+"_bytes.txt", std::ofstream::binary);
-    myfile.write(encoded_string.c_str(), encoded_string.size());
+    //myfile.write(value, encoded_string.size());
+    myfile << c;
     myfile.close();
 
     myfile.open(output_name+"_bytes.hdr");
     myfile << encoded_string.size();
     myfile.close();
+    */
     /*
     std::cout <<  c_2 << "\n";
     std::cout << (int)c_2 << "\n";
@@ -122,19 +124,35 @@ int write_bytes(const std::string &output_name, const std::string &encoded_strin
 }
 
 std::string read_bytes(const std::string &file_name) {
-    int size;
+    int bits;
 
-    std::ifstream myfile (file_name+"_bytes.hdr");
-    myfile >> size;
+    std::ifstream myfile (file_name+"_bitstream.hdr");
+    myfile >> bits;
     myfile.close();
 
-    myfile.open(file_name+"_bytes.txt", std::ifstream::binary);
+    int bytes = ceil(bits/8.0);
+
+    myfile.open(file_name+"_bitstream.txt", std::ifstream::binary);
     if (myfile.is_open()) {
-        std::string buffer;
-        buffer.resize(size);
-        myfile.read(&buffer[0], buffer.size());
+        unsigned char buffer[bytes];
+        myfile >> buffer;
         myfile.close();
-        return buffer;
+
+        std::string output;
+        for (int i = 0; i < bytes; i ++) { 
+            // if there is a leftover number of bits
+            // For example, if there are 6 or 14 bits
+            // We want to process the first few bytes
+            // Then process the remainder
+            if (i == bytes-1 && bits%8 != 0){
+                std::bitset<8>b(buffer[i]);
+                std::string b_string = b.to_string();
+                output += b_string.substr(8-bits%8, 8);
+                return output;
+            }
+            output += std::bitset<8>(buffer[i]).to_string();
+        }
+        return output;
     }
     std::cout << "There was an error reading the file. Did you enter the file name correctly?\n";
     return "";
