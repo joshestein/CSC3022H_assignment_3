@@ -85,6 +85,8 @@ std::string read_bytes_into_binary_string(const std::string &file_name) {
     return "";
 }
 
+int calculate_compression_ratio(const std::string &encoded_string) {
+}
 int main(int argc, char *argv[]) {
     if (argc != 3) {
         std::cout << "You entered incorrect arguments.\n";
@@ -140,6 +142,10 @@ int main(int argc, char *argv[]) {
     std::string new_encoded_string = read_bytes_into_binary_string(std::string(argv[2]));
     std::string new_decoded = tree.decode(new_encoded_string, reverse_encoding);
     std::cout << new_decoded << "\n";
+
+    // caluclate compression ratio
+    int compression_ratio = utilities::calculate_compression_ratio(encoded_string);
+    std::cout << "Compression ratio: " << compression_ratio << "\n";
             
     return 0;
 }

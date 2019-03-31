@@ -23,6 +23,8 @@ namespace utilities {
 
     // Generates binary string from bytes
     std::string generate_string_from_bytes(const int &bits, const int &bytes, unsigned char *bit_buffer);
+
+    int calculate_compression_ratio(const std::string &input);
 }
 
 #endif

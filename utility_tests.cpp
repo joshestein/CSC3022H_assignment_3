@@ -99,4 +99,18 @@ TEST_CASE("Utility tests", "[Utilities]") {
 
     REQUIRE(binary_string == "110");
     REQUIRE(new_binary_string == "1100110101");
+
+    std::cout << "Compression ratio tests\n";
+    std::string input = "11110000";
+    std::cout << "Size: " << input.size();
+    int compression = utilities::calculate_compression_ratio(input);
+    REQUIRE(compression == 1);
+
+    input = "111100001111";
+    compression = utilities::calculate_compression_ratio(input);
+    REQUIRE(compression == 2);
+
+    input = "1111000011110000";
+    compression = utilities::calculate_compression_ratio(input);
+    REQUIRE(compression == 2);
 }

@@ -77,3 +77,7 @@ std::string utilities::generate_string_from_bytes(const int &bits, const int &by
     }
     return output;
 }
+
+int utilities::calculate_compression_ratio(const std::string &input) {
+    return input.size()/8 + (input.size() % 8 ? 1 : 0);
+}
