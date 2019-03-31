@@ -1,13 +1,9 @@
-#include <bitset>
 #include <fstream>
 #include <iostream>
 #include <math.h>
-#include <memory>
-#include <queue>
-#include <string>
 #include <sstream>
+#include <string>
 #include <unordered_map>
-#include <vector>
 #include "HuffmanNode.h"
 #include "HuffmanTree.h"
 #include "utilities.h"
@@ -103,12 +99,13 @@ int main(int argc, char *argv[]) {
     // generate letter frequencies in given string
     utilities::get_letter_frequencies(input, key_value_pairs);
     
-    // build huffman tree and encodings
+    // build huffman tree
     HuffmanTree tree; 
     tree.build_tree(key_value_pairs);
     std::unordered_map<char, std::string> huffman_encoding;
     std::unordered_map<std::string, char> reverse_encoding;
 
+    // build huffman encodings 
     HuffmanNode root = tree.top();
     tree.encode(root, "", huffman_encoding, reverse_encoding);
 
@@ -117,8 +114,10 @@ int main(int argc, char *argv[]) {
         std::cout << "Succesfully wrote Huffman pairs to output header.\n";
     }
 
+    // generate encoded (binary) string
     std::string encoded_string = utilities::generate_huffman_encoding(input, huffman_encoding);
 
+    // write encoding to file
     if (write_encoding(argv[2], encoded_string, huffman_encoding)) {
         std::cout << "Wrote encoded string to output file. \n";
     }
@@ -128,9 +127,11 @@ int main(int argc, char *argv[]) {
 
     int bytes = ceil(encoded_string.size()/8.0);
     unsigned char out_buffer[bytes];
+
     // generate output bit buffer
     utilities::generate_bit_buffer(encoded_string, out_buffer);
 
+    // write bitstream to file
     if (write_bytes(out_buffer, argv[2])) {
         std::cout << "Succesfully wrote bit-stream.\n";
     }
