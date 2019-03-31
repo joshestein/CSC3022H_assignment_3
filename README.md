@@ -11,6 +11,8 @@ Welcome to the readme.
 
 Run ```make tests``` to run all unit tests.
 
+Individual tests can be found in all files with the suffix '_tests.cpp'
+
 ### Files
 
 The HuffmanNode class is responsible for representing nodes within the tree.
@@ -24,8 +26,9 @@ implemented to allow for pushing, popping, etc. The tree class also includes
 methods to build, the tree, encode the tree and decode some binary string.
 
 The driver.cpp file is responsible for reading the input file, generating the
-HuffmanTree, generating the corresponding encoding and outputting the output
-files and writing out the corresponding headers and binary strings.
+HuffmanTree, generating the corresponding huffman pairs, encoding the input,
+outputting the output files (writing out the corresponding headers and binary
+files).
 
 The driver class outputs 4 files:
 
