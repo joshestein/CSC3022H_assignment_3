@@ -10,20 +10,7 @@
 #include <vector>
 #include "HuffmanNode.h"
 #include "HuffmanTree.h"
-
-void print_unordered_map(std::unordered_map<char, int> &key_value_pairs) {
-    for( const auto& n : key_value_pairs ) {
-        std::cout << "Key:[" << n.first << "] Value:[" << n.second << "]\n";
-    }
-}
-
-// Checks if key is in unordered_map
-bool check_key(char letter, std::unordered_map<char, int> &key_value_pairs) {
-    if (key_value_pairs.find(letter) == key_value_pairs.end()) {
-        return false;
-    }
-    return true;
-}
+#include "utilities.h"
 
 // Read file into string
 std::string read_file_into_string(const std::string &file_name) {
@@ -36,17 +23,6 @@ std::string read_file_into_string(const std::string &file_name) {
     }
     std::cout << "There was an error reading the file. Did you enter the file name correctly?\n";
     return "";
-}
-
-// Generate letter frequencies
-void get_letter_frequencies(const std::string &input, std::unordered_map<char, int> &key_value_pairs) {
-    for (int i = 0; i < input.size(); i++) {
-        if (check_key(input[i], key_value_pairs)) {
-            key_value_pairs[input[i]]++;
-        } else {
-            key_value_pairs[input[i]] = 1;
-        }
-    }
 }
 
 // Write encoding pairs to .hdr file and actual encoding to .txt
@@ -148,8 +124,8 @@ int main(int argc, char *argv[]) {
     std::string input = read_file_into_string(argv[1]);
     std::unordered_map<char, int> key_value_pairs = {};
 
-    // generate letter frequencies in string
-    get_letter_frequencies(input, key_value_pairs);
+    // generate letter frequencies in given string
+    utilities::get_letter_frequencies(input, key_value_pairs);
     
     HuffmanTree tree; 
     tree.build_tree(key_value_pairs);
