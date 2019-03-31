@@ -70,28 +70,34 @@ TEST_CASE("HuffmanNode tests", "[HuffmanNode]") {
     //------------------Move constructor--------------------//
     //------------------------------------------------------//
     std::cout << "Move constructor tests\n";
-    HuffmanNode move_node = HuffmanNode('b', 100);
-    
-    REQUIRE(move_node.getFrequency() == 100);
-    REQUIRE(move_node.getLetter() == 'b');
+
+    HuffmanNode move_node(std::move(param_node));
+    REQUIRE(move_node.getFrequency() == 25);
+    REQUIRE(move_node.getLetter() == 'a');
     REQUIRE(move_node.left == nullptr);
     REQUIRE(move_node.right == nullptr);
 
-    REQUIRE_FALSE(move_node.getFrequency() != 100);
-    REQUIRE_FALSE(move_node.getLetter() != 'b');
-    REQUIRE_FALSE(move_node.left != nullptr);
-    REQUIRE_FALSE(move_node.right != nullptr);
+    REQUIRE(param_node.getFrequency() == -1);
+    REQUIRE(param_node.getLetter() == '\0');
+    REQUIRE(param_node.left == nullptr);
+    REQUIRE(param_node.right == nullptr);
 
     //------------------------------------------------------//
     //------------------Move assignment---------------------//
-    // TODO
     //------------------------------------------------------//
     std::cout << "Move assignment tests\n";
+    HuffmanNode move_assign_node;
+    move_assign_node = std::move(move_node);
     
-    //------------------------------------------------------//
-    //------------------Destructor--------------------------//
-    // TODO
-    //------------------------------------------------------//
+    REQUIRE(move_assign_node.getFrequency() == 25);
+    REQUIRE(move_assign_node.getLetter() == 'a');
+    REQUIRE(move_assign_node.left == nullptr);
+    REQUIRE(move_assign_node.right == nullptr);
+
+    REQUIRE(move_node.getFrequency() == -1);
+    REQUIRE(move_node.getLetter() == '\0');
+    REQUIRE(move_node.left == nullptr);
+    REQUIRE(move_node.right == nullptr);
     
     //------------------------------------------------------//
     //------------------Pointer tests-----------------------//

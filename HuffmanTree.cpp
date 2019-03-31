@@ -6,26 +6,30 @@
 
 // default constructor
 HuffmanTree::HuffmanTree(void) {
-    std::cout << "Tree being created\n";
+    //std::cout << "Tree being created\n";
 }
 
 // copy constructor
 HuffmanTree::HuffmanTree(const HuffmanTree& tree): huffman_tree(tree.huffman_tree) {
+    //std::cout << "Copy constructor called\n";
 }
 
 // copy assignment
 HuffmanTree& HuffmanTree::operator= (const HuffmanTree& tree) {
+    //std::cout << "Copy assignment called\n";
     huffman_tree = tree.huffman_tree;
 }
 
 // move constructor
 HuffmanTree::HuffmanTree(HuffmanTree&& tree): huffman_tree(tree.huffman_tree) {
+    //std::cout << "Move constructor called\n";
     // reset tree 
     tree.huffman_tree = std::priority_queue<HuffmanNode, std::vector<HuffmanNode>, Compare> ();
 }
 
 // move assignment
 HuffmanTree& HuffmanTree::operator=(HuffmanTree&& tree) {
+    //std::cout << "Move assignment called\n";
     huffman_tree = tree.huffman_tree;
     tree.huffman_tree = std::priority_queue<HuffmanNode, std::vector<HuffmanNode>, Compare> ();
 }

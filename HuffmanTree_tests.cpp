@@ -1,15 +1,9 @@
 #include "catch.hpp"
 #include "HuffmanTree.h"
 #include "HuffmanNode.h"
+#include "utilities.h"
 #include <iostream>
 #include <unordered_map>
-
-bool check_key(char letter, std::unordered_map<char, int> &key_value_pairs) {
-     if (key_value_pairs.find(letter) == key_value_pairs.end()) {
-         return false;
-     }
-     return true;
-}
 
 TEST_CASE("HuffmanTree tests", "[HuffmanTree]") {
     std::cout << "HUFFMAN_TREE TESTS\n";
@@ -48,10 +42,10 @@ TEST_CASE("HuffmanTree tests", "[HuffmanTree]") {
     std::unordered_map<std::string, char> reverse_encoding;
     std::unordered_map<char, int> key_value_pairs = {};
 
-    REQUIRE(check_key('a', key_value_pairs) == false);
+    REQUIRE(utilities::check_key('a', key_value_pairs) == false);
 
     for (int i = 0; i < input.size(); i++) {
-        if (check_key(input[i], key_value_pairs)) {
+        if (utilities::check_key(input[i], key_value_pairs)) {
             key_value_pairs[input[i]]++;
         } else {
             key_value_pairs[input[i]] = 1;
@@ -68,18 +62,47 @@ TEST_CASE("HuffmanTree tests", "[HuffmanTree]") {
     REQUIRE((combo.right)->getLetter() == 'b');
     REQUIRE((combo.right)->getFrequency() == 2);
 
+
+    HuffmanTree new_tree;
+    key_value_pairs.clear();
+    encoding.clear();
+    reverse_encoding.clear();
+
+    input = "aabc";
+    //      (4)
+    //     /   \
+    //   (a-2) (2)
+    //        /   \
+    //     (c-1)  (b-1)
+
+
+    REQUIRE(utilities::check_key('a', key_value_pairs) == false);
+
+    for (int i = 0; i < input.size(); i++) {
+        if (utilities::check_key(input[i], key_value_pairs)) {
+            key_value_pairs[input[i]]++;
+        } else {
+            key_value_pairs[input[i]] = 1;
+        }
+    }
+    new_tree.build_tree(key_value_pairs);
+    REQUIRE(new_tree.size() == 1);
+
     std::cout << "Encoding tests\n";
-    tree.encode(combo, "", encoding, reverse_encoding);
+    combo = new_tree.top();
+    new_tree.encode(combo, "", encoding, reverse_encoding);
 
     REQUIRE(encoding['a'] == "0");
-    REQUIRE(encoding['b'] == "1");
+    REQUIRE(encoding['b'] == "11");
+    REQUIRE(encoding['c'] == "10");
     REQUIRE(reverse_encoding["0"] == 'a');
-    REQUIRE(reverse_encoding["1"] == 'b');
+    REQUIRE(reverse_encoding["11"] == 'b');
+    REQUIRE(reverse_encoding["10"] == 'c');
 
     std::cout << "Decoding tests\n";
-    std::string binary = "011";  
-    std::string decoded = tree.decode(binary, reverse_encoding);
-    REQUIRE(decoded == "abb");
+    std::string binary = "001110";  
+    std::string decoded = new_tree.decode(binary, reverse_encoding);
+    REQUIRE(decoded == "aabc");
 
     std::cout << "Copy constructor tests\n";
     HuffmanTree copied_tree = tree;
@@ -101,7 +124,7 @@ TEST_CASE("HuffmanTree tests", "[HuffmanTree]") {
     REQUIRE((combo.right)->getFrequency() == 2);
 
     std::cout << "Copy assignment tests\n";
-    HuffmanTree new_tree;
+
     // is this correct?
     new_tree = tree;
     REQUIRE(new_tree.size() == 1);
@@ -123,8 +146,28 @@ TEST_CASE("HuffmanTree tests", "[HuffmanTree]") {
     REQUIRE((combo.right)->getFrequency() == 2);
 
     std::cout << "Move constructor tests\n";
-    //TODO
+
+    HuffmanTree move_const(std::move(tree));
+    combo = move_const.top();
+    REQUIRE(combo.getFrequency() == 3);
+    REQUIRE(combo.getLetter() == '\0');
+    REQUIRE((combo.left)->getLetter() == 'a');
+    REQUIRE((combo.left)->getFrequency() == 1);
+    REQUIRE((combo.right)->getLetter() == 'b');
+    REQUIRE((combo.right)->getFrequency() == 2);
+
+    REQUIRE(tree.size() == 0);
     
     std::cout << "Move assignment tests\n";
-    //TODO
+    HuffmanTree move_assign;
+    move_assign = std::move(move_const);
+    combo = move_assign.top();
+    REQUIRE(combo.getFrequency() == 3);
+    REQUIRE(combo.getLetter() == '\0');
+    REQUIRE((combo.left)->getLetter() == 'a');
+    REQUIRE((combo.left)->getFrequency() == 1);
+    REQUIRE((combo.right)->getLetter() == 'b');
+    REQUIRE((combo.right)->getFrequency() == 2);
+
+    REQUIRE(move_const.size() == 0);
 }

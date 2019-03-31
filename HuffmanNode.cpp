@@ -2,7 +2,7 @@
 #include <iostream>
 
 // default constructor
-HuffmanNode::HuffmanNode(): letter('\0'), frequency(0) {};
+HuffmanNode::HuffmanNode(): letter('\0'), frequency(0) {}
 
 // parameterized constructor
 HuffmanNode::HuffmanNode(char letter, int frequency): letter(letter), frequency(frequency), left(nullptr), right(nullptr) {
@@ -19,10 +19,12 @@ HuffmanNode::HuffmanNode(char letter, int frequency, HuffmanNode &pLeft, Huffman
 
 // copy constructor
 HuffmanNode::HuffmanNode(const HuffmanNode& node): letter(node.letter), frequency(node.frequency), left(node.left), right(node.right) {
+    //std::cout << "Copy constructor called\n";
 }
 
 // copy assignment
 HuffmanNode& HuffmanNode::operator= (const HuffmanNode& node){
+    //std::cout << "Copy assignment called\n";
     letter = node.letter;
     frequency = node.frequency;
     left = node.left;
@@ -31,12 +33,14 @@ HuffmanNode& HuffmanNode::operator= (const HuffmanNode& node){
 
 // move constructor
 HuffmanNode::HuffmanNode(HuffmanNode&& node): letter(node.letter), frequency(node.frequency), left(std::move(node.left)), right(std::move(node.right)){
+    //std::cout << "Move constructor called\n";
     node.letter = '\0';
     node.frequency = -1;
 }
 
 // move assignment
 HuffmanNode& HuffmanNode::operator= (HuffmanNode&& node) {
+    //std::cout << "Move assignment called\n";
     if (this != & node) {
         letter = node.letter;
         frequency = node.frequency;
