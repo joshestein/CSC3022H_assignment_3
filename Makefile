@@ -1,6 +1,6 @@
 CC=g++ -std=c++11
 OBJECTS=HuffmanNode.o HuffmanTree.o utilities.o
-TEST_FILES=driver_tests.cpp HuffmanNode_tests.cpp HuffmanTree_tests.cpp 
+TEST_FILES=utility_tests.cpp HuffmanNode_tests.cpp HuffmanTree_tests.cpp 
 
 all: clean build run
 
