@@ -40,6 +40,9 @@ TEST_CASE("HuffmanNode tests", "[HuffmanNode]") {
     std::cout << "Copy constructor tests\n";
     HuffmanNode copied_node = param_node;
 
+    std::shared_ptr<HuffmanNode> ptrNode2(std::make_shared<HuffmanNode>('a', 100));
+    copied_node.left = ptrNode2;
+
     REQUIRE(param_node.getFrequency() == 25);
     REQUIRE(param_node.getLetter() == 'a');
     REQUIRE(param_node.left == nullptr);
@@ -47,7 +50,7 @@ TEST_CASE("HuffmanNode tests", "[HuffmanNode]") {
 
     REQUIRE(copied_node.getFrequency() == 25);
     REQUIRE(copied_node.getLetter() == 'a');
-    REQUIRE(copied_node.left == nullptr);
+    REQUIRE((copied_node.left)->getFrequency() == 100);
     REQUIRE(copied_node.right == nullptr);
 
     //------------------------------------------------------//
@@ -114,7 +117,7 @@ TEST_CASE("HuffmanNode tests", "[HuffmanNode]") {
     REQUIRE(ptrNode->left == nullptr);
     REQUIRE(ptrNode->right == nullptr);
     
-    std::shared_ptr<HuffmanNode> ptrNode2(std::make_shared<HuffmanNode>('a', 100));
+    //std::shared_ptr<HuffmanNode> ptrNode2(std::make_shared<HuffmanNode>('a', 100));
     REQUIRE_FALSE(ptrNode2 == nullptr);
     REQUIRE(ptrNode2->getFrequency() == 100);
     REQUIRE(ptrNode2->getLetter() == 'a');
