@@ -1,9 +1,11 @@
 #include <fstream>
 #include <iostream>
+#include <iterator>
 #include <math.h>
 #include <sstream>
 #include <string>
 #include <unordered_map>
+#include <vector>
 #include "HuffmanNode.h"
 #include "HuffmanTree.h"
 #include "utilities.h"
@@ -92,11 +94,18 @@ std::string read_bytes_into_binary_string(const std::string &file_name) {
 
     myfile.open(file_name+"_bitstream.txt", std::ifstream::binary);
     if (myfile.is_open()) {
-        // this would make me happy if it was unsigned
-        char buffer[bytes];
-        myfile.read(buffer, bytes);
+        // this is because you cannot read directly into a unsigned char buffer
+        std::vector<unsigned char> vec;
+        vec.reserve(bytes);
+        vec.insert(vec.begin(), std::istream_iterator<unsigned char>(myfile),
+                                std::istream_iterator<unsigned char>());
         myfile.close();
 
+        // put vector into char (this is hacky)
+        unsigned char buffer[bytes];
+        for (int i = 0; i < bytes; i++) {
+            buffer[i] = vec[i];
+        }
         std::string output = utilities::generate_string_from_bytes(bits, bytes, buffer);
         return output;
     }

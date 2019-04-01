@@ -60,7 +60,7 @@ void utilities::generate_bit_buffer(const std::string &encoded_string, unsigned 
     }
 }
 
-std::string utilities::generate_string_from_bytes(const int &bits, const int &bytes, char *bit_buffer) {
+std::string utilities::generate_string_from_bytes(const int &bits, const int &bytes, unsigned char *bit_buffer) {
     std::string output;
     for (int i = 0; i < bytes; i ++) { 
         // if there is a leftover number of bits

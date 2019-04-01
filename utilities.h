@@ -22,7 +22,7 @@ namespace utilities {
     void generate_bit_buffer(const std::string &encoded_string, unsigned char* out_buffer);
 
     // Generates binary string from bytes
-    std::string generate_string_from_bytes(const int &bits, const int &bytes, char *bit_buffer);
+    std::string generate_string_from_bytes(const int &bits, const int &bytes, unsigned char *bit_buffer);
 
     int calculate_compression_ratio(const std::string &input);
 }

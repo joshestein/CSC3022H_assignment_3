@@ -6,6 +6,7 @@ Welcome to the readme.
 2. Run ./\<executable> \<inputFile.txt> \<outputName> to build the Huffman
    encoding. Please provide a simple output name - the program will build a
    corresponding output.txt and output.hdr
+3. Please make sure your \<inputFile.txt> ends with a newline
 
 ### Tests
 
