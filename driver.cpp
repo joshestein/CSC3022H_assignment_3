@@ -33,7 +33,8 @@ int write_pairs(const std::string &output_name, std::unordered_map<char, std::st
             myfile  << pair.first << ", " << pair.second << "\n";
         }
         myfile.close();
-    }
+        return 1;
+    } 
     std::cout << "Failed to write Huffman pairs to header\n";
     return 0;
 }
@@ -50,12 +51,29 @@ int write_encoding(const std::string &output_name, const std::string &encoded_st
     return 0;
 }
 
-int write_bytes(const unsigned char *bytes, const std::string &output_name) {
+int write_number_bits(const std::string &encoded_string, const std::string &output_name) {
+    std::ofstream myfile;
+
+    myfile.open(output_name + "_bitstream.hdr");
+    if (myfile.is_open()) {
+        myfile << encoded_string.size();
+        myfile.close();
+        return 1;
+    }
+    std::cout << "Failed to write bitstream header\n";
+    return 0;
+}
+
+
+int write_bytes(const unsigned char *bytes, int num_bytes, const std::string &output_name) {
     std::ofstream myfile;
 
     myfile.open(output_name + "_bitstream.txt", std::ofstream::binary);
     if (myfile.is_open()) {
-        myfile << bytes;
+        for (int i = 0; i < num_bytes; i++){
+            myfile<< bytes[i];
+        }
+        //myfile << bytes;
         myfile.close();
         return 1;
     }
@@ -74,8 +92,9 @@ std::string read_bytes_into_binary_string(const std::string &file_name) {
 
     myfile.open(file_name+"_bitstream.txt", std::ifstream::binary);
     if (myfile.is_open()) {
-        unsigned char buffer[bytes];
-        myfile >> buffer;
+        // this would make me happy if it was unsigned
+        char buffer[bytes];
+        myfile.read(buffer, bytes);
         myfile.close();
 
         std::string output = utilities::generate_string_from_bytes(bits, bytes, buffer);
@@ -119,6 +138,11 @@ int main(int argc, char *argv[]) {
     // generate encoded (binary) string
     std::string encoded_string = utilities::generate_huffman_encoding(input, huffman_encoding);
 
+    // write number of bits to file
+    if (write_number_bits(encoded_string, argv[2])) {
+        std::cout << "Wrote number of bits to header. \n";
+    }
+
     // write encoding to file
     if (write_encoding(argv[2], encoded_string, huffman_encoding)) {
         std::cout << "Wrote encoded string to output file. \n";
@@ -134,12 +158,16 @@ int main(int argc, char *argv[]) {
     utilities::generate_bit_buffer(encoded_string, out_buffer);
 
     // write bitstream to file
-    if (write_bytes(out_buffer, argv[2])) {
+    if (write_bytes(out_buffer, bytes, argv[2])) {
         std::cout << "Succesfully wrote bit-stream.\n";
     }
 
     // read bit buffer and decode
     std::string new_encoded_string = read_bytes_into_binary_string(std::string(argv[2]));
+    if (new_encoded_string.compare(encoded_string)) {
+        std::cout << "Decoded string matches original encoding\n";
+    }
+
     std::string new_decoded = tree.decode(new_encoded_string, reverse_encoding);
     std::cout << new_decoded << "\n";
 
